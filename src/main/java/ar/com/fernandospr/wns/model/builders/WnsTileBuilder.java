@@ -14,11 +14,12 @@ public class WnsTileBuilder extends WnsAbstractBuilder<WnsTileBuilder> {
 		this.tile = new WnsTile();
 	}
 	
-	public void addBinding() {
+	public WnsTileBuilder addBinding() {
 		if (getVisual().bindings == null) {
 			getVisual().bindings = new ArrayList<WnsBinding>();
 		}
 		getVisual().bindings.add(new WnsBinding());
+		return this;
 	}
 	
 	@Override
