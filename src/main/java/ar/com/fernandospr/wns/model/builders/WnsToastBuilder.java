@@ -1,5 +1,7 @@
 package ar.com.fernandospr.wns.model.builders;
 
+import java.util.ArrayList;
+
 import ar.com.fernandospr.wns.model.WnsAudio;
 import ar.com.fernandospr.wns.model.WnsBinding;
 import ar.com.fernandospr.wns.model.WnsToast;
@@ -28,10 +30,11 @@ public class WnsToastBuilder extends WnsAbstractBuilder<WnsToastBuilder> {
 	
 	@Override
 	protected WnsBinding getBinding() {
-		if (getVisual().binding == null) {
-			getVisual().binding = new WnsBinding();
+		if (getVisual().bindings == null) {
+			getVisual().bindings = new ArrayList<WnsBinding>();
+			getVisual().bindings.add(new WnsBinding());
 		}
-		return this.toast.visual.binding;
+		return this.toast.visual.bindings.get(0);
 	}
 	
 	protected WnsAudio getAudio() {

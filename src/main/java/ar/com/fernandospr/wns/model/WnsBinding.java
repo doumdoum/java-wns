@@ -30,6 +30,10 @@ public class WnsBinding {
 	@XmlAttribute
 	public Boolean addImageQuery;
 	
+	/** @brief only relevant for tile, undefined for toast */
+	@XmlAttribute
+	public String contentId;
+	
 	@XmlElement(name = "image")
 	public List<WnsImage> images;
 	

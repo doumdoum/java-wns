@@ -24,6 +24,9 @@ public class WnsToast extends WnsAbstractNotification {
 	@XmlElement(name = "audio")
 	public WnsAudio audio;
 	
+	@XmlElement(name = "commands")
+	public WnsCommands commands;
+	
 	@Override
 	public String getType() {
 		return WnsNotificationType.TOAST;
