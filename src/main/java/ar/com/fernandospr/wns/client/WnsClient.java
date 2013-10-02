@@ -6,6 +6,8 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import lombok.extern.log4j.Log4j;
+
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
@@ -26,6 +28,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 import com.sun.jersey.client.apache.ApacheHttpClient;
 import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
 
+@Log4j
 public class WnsClient {
 	private static final String SCOPE = "notify.windows.com";
 	private static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
@@ -86,6 +89,8 @@ public class WnsClient {
 			throw new WnsException("Authentication failed. HTTP error code: " + response.getStatus());
 		}
 		
+		log.trace(String.format("Received %s [h: %s][c: %s]", response.getEntity(String.class), 
+					response.getHeaders().toString(), response.getCookies().toString()));
 		this.token = response.getEntity(WnsOAuthToken.class);
 	}
 	
@@ -98,6 +103,9 @@ public class WnsClient {
 	 * @throws WnsException when authentication fails
 	 */
 	public WnsNotificationResponse push(WnsResourceBuilder resourceBuilder, String channelUri, WnsAbstractNotification notification, int retriesLeft, WnsNotificationRequestOptional optional) throws WnsException {
+
+		log.trace(String.format("Calling %s [%d]",channelUri, retriesLeft));
+		
 		WebResource webResource = this.client.resource(channelUri);
 		
 		Builder webResourceBuilder = resourceBuilder.build(webResource, notification, getToken().access_token, optional);
