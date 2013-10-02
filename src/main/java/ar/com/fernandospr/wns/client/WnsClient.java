@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
 import ar.com.fernandospr.wns.exceptions.WnsException;
@@ -22,6 +23,8 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import com.sun.jersey.client.apache.ApacheHttpClient;
+import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
 
 public class WnsClient {
 	private static final String SCOPE = "notify.windows.com";
@@ -40,12 +43,28 @@ public class WnsClient {
 	}
 	
 	private static Client createClient(boolean logging) {
-		ClientConfig clientConfig = new DefaultClientConfig();
-		clientConfig.getClasses().add(JacksonJsonProvider.class);
-		Client client = Client.create(clientConfig);
-		if (logging == true) {
+		
+		// from https://wikis.oracle.com/pages/viewpage.action?pageId=16023606
+		final String proxyHost = System.getProperty("http.proxyHost", "");
+    	final String proxyPort = System.getProperty("http.proxyPort", "3128");
+         
+        final DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
+        if( ! proxyHost.trim().isEmpty() ){
+            config.getProperties().put(DefaultApacheHttpClientConfig.PROPERTY_PROXY_URI, "http://" + proxyHost + ":" + proxyPort);
+             
+            final String proxyUser = System.getProperty("http.proxyUser","");
+            final String proxyPassword = System.getProperty("http.proxyPassword","");
+            if( ! proxyUser.trim().isEmpty() ){
+                config.getState().setProxyCredentials(AuthScope.ANY_REALM, proxyHost, Integer.parseInt(proxyPort), proxyUser, proxyPassword);
+            }
+        }
+		config.getClasses().add(JacksonJsonProvider.class);
+		Client client = ApacheHttpClient.create(config);
+
+		if(logging){
 			client.addFilter(new LoggingFilter(System.out));
 		}
+
 		return client;
 	}
 	
