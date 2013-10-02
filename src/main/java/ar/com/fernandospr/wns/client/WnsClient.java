@@ -45,15 +45,15 @@ public class WnsClient {
 	private static Client createClient(boolean logging) {
 		
 		// from https://wikis.oracle.com/pages/viewpage.action?pageId=16023606
-		final String proxyHost = System.getProperty("http.proxyHost", "");
-    	final String proxyPort = System.getProperty("http.proxyPort", "3128");
+		final String proxyHost = System.getProperty("https.proxyHost", "");
+    	final String proxyPort = System.getProperty("https.proxyPort", "3128");
          
         final DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
         if( ! proxyHost.trim().isEmpty() ){
             config.getProperties().put(DefaultApacheHttpClientConfig.PROPERTY_PROXY_URI, "http://" + proxyHost + ":" + proxyPort);
              
-            final String proxyUser = System.getProperty("http.proxyUser","");
-            final String proxyPassword = System.getProperty("http.proxyPassword","");
+            final String proxyUser = System.getProperty("https.proxyUser","");
+            final String proxyPassword = System.getProperty("https.proxyPassword","");
             if( ! proxyUser.trim().isEmpty() ){
                 config.getState().setProxyCredentials(AuthScope.ANY_REALM, proxyHost, Integer.parseInt(proxyPort), proxyUser, proxyPassword);
             }
