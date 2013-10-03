@@ -89,7 +89,7 @@ public class WnsClient {
 			throw new WnsException("Authentication failed. HTTP error code: " + response.getStatus());
 		}
 		
-		log.trace(String.format("Received %s [h: %s][c: %s]", response.getEntity(String.class), 
+		log.trace(String.format("Received [h: %s][c: %s]", 
 					response.getHeaders().toString(), response.getCookies().toString()));
 		this.token = response.getEntity(WnsOAuthToken.class);
 	}
