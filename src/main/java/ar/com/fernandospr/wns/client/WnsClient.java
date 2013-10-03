@@ -62,6 +62,8 @@ public class WnsClient {
             }
         }
 		config.getClasses().add(JacksonJsonProvider.class);
+		config.getClasses().add(WnsOAuthToken.class);
+
 		Client client = ApacheHttpClient.create(config);
 
 		if(logging){
