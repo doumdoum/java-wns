@@ -108,9 +108,11 @@ public class WnsClient {
 
 		log.trace(String.format("Calling %s [%d]",channelUri, retriesLeft));
 		
+		WnsOAuthToken token = getToken();
+		
 		WebResource webResource = this.client.resource(channelUri);
 		
-		Builder webResourceBuilder = resourceBuilder.build(webResource, notification, getToken().access_token, optional);
+		Builder webResourceBuilder = resourceBuilder.build(webResource, notification, token.access_token, optional);
 		
 		ClientResponse response = webResourceBuilder.post(ClientResponse.class);
 		
